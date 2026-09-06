@@ -511,20 +511,28 @@ function handleSubmit(statusType) {
     const payload = { 
         timestamp: new Date().toISOString(), student: selectedStudentName, group: document.getElementById("group").value, 
         parentName: document.getElementById("parentName").value, parentPhone: document.getElementById("parentPhone").value, 
-        status: statusType, volunteerName: activeLoggedInVolunteer // ✍️ Volunteer signature!
+        status: statusType, volunteerName: activeLoggedInVolunteer 
     };
     
     fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", cache: "no-cache", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(payload) })
     .then(() => {
         alertBox.className = "status-alert alert-success"; alertBox.textContent = `🎉 Success! Logged as ${statusType}.`;
         setTimeout(() => { 
-            document.getElementById("kioskForm").reset(); alertBox.style.display = "none"; 
-            document.getElementById("kioskLoginGate").style.display = "flex";
-            document.getElementById("gatePinInput").value = ""; fetchShiftVolunteers();
+            document.getElementById("kioskForm").reset(); 
+            alertBox.style.display = "none"; 
+            
+            // ✅ FIXED: The instant lock gate code has been removed!
+            // The screen will clear cleanly and let the volunteer pick the next student immediately.
+            // It will only re-lock if untouched for 3 minutes.
+            
+            // Force reset your group filter back to "ALL" so the list resets for the next kid
+            document.getElementById("groupFilterDropdown").value = "ALL";
+            filterStudentListBySelectedGroup();
         }, 2500);
     })
     .catch(() => { alertBox.className = "status-alert alert-danger"; alertBox.textContent = "❌ Connection error."; });
 }
+
 
 window.addEventListener("DOMContentLoaded", () => { fetchLiveStudentRoster(); fetchShiftVolunteers(); });
 
