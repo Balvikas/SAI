@@ -234,22 +234,38 @@ let activeLoggedInVolunteer = "Self Kiosk";
 let sessionTimeoutTracker;
 
 // 🔐 VOLUNTEER AUTHENTICATION ENGINE (Step 5)
+// 🔐 VOLUNTEER AUTHENTICATION ENGINE (FIXED RES SYNTAX)
 function fetchShiftVolunteers() {
     const select = document.getElementById("volunteerSelect");
     if (!select) return;
+    // Add the dynamic target spreadsheet ID string as an outgoing parameter rule
     fetch(`${GOOGLE_SCRIPT_URL}?action=getActiveVolunteers`)
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error("Network response error link failed");
+            return res.json(); // ✅ FIXED: Uses matching parameters cleanly
+        })
         .then(data => {
             volunteerRosterCache = data;
             select.innerHTML = '<option value="">-- Choose Your Name --</option>';
+            
+            if (!data || data.length === 0) {
+                select.innerHTML = '<option value="">⚠️ AdminConfig tab is empty</option>';
+                return;
+            }
+     
             data.forEach(v => {
                 const opt = document.createElement("option");
-                opt.value = v.name; opt.textContent = v.name;
+                opt.value = v.name; 
+                opt.textContent = v.name;
                 select.appendChild(opt);
             });
         })
-        .catch(() => { select.innerHTML = '<option value="">❌ Error fetching shift data</option>'; });
+        .catch(error => { 
+            console.error("Shift data fetch crashed:", error);
+            select.innerHTML = '<option value="">❌ Error fetching shift data</option>'; 
+        });
 }
+
 
 function verifyVolunteerLogin() {
     const selectedName = document.getElementById("volunteerSelect").value;
