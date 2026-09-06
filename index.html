@@ -234,25 +234,31 @@ let activeLoggedInVolunteer = "Self Kiosk";
 let sessionTimeoutTracker;
 
 // 🔐 VOLUNTEER AUTHENTICATION ENGINE (Step 5)
-// 🔐 VOLUNTEER AUTHENTICATION ENGINE (FIXED RES SYNTAX)
+// 🔐 VOLUNTEER AUTHENTICATION ENGINE (CORRECTED FRONTEND RES TYPO)
 function fetchShiftVolunteers() {
     const select = document.getElementById("volunteerSelect");
     if (!select) return;
-    // Add the dynamic target spreadsheet ID string as an outgoing parameter rule
+    
     fetch(`${GOOGLE_SCRIPT_URL}?action=getActiveVolunteers`)
         .then(res => {
-            if (!res.ok) throw new Error("Network response error link failed");
-            return res.json(); // ✅ FIXED: Uses matching parameters cleanly
+            if (!res.ok) throw new Error("Server network port error");
+            return res.json(); // ✅ FIXED: Now correctly matches the "res" variable from above!
         })
         .then(data => {
             volunteerRosterCache = data;
             select.innerHTML = '<option value="">-- Choose Your Name --</option>';
             
             if (!data || data.length === 0) {
-                select.innerHTML = '<option value="">⚠️ AdminConfig tab is empty</option>';
+                select.innerHTML = '<option value="">⚠️ No data inside AdminConfig</option>';
                 return;
             }
-     
+            
+            // If the backend sent an error message, catch it and show it
+            if (data[0] && data[0].name.startsWith("❌")) {
+                select.innerHTML = `<option value="">${data[0].name}: ${data[0].pin}</option>`;
+                return;
+            }
+            
             data.forEach(v => {
                 const opt = document.createElement("option");
                 opt.value = v.name; 
@@ -261,10 +267,11 @@ function fetchShiftVolunteers() {
             });
         })
         .catch(error => { 
-            console.error("Shift data fetch crashed:", error);
+            console.error("Shift sync crashed:", error);
             select.innerHTML = '<option value="">❌ Error fetching shift data</option>'; 
         });
 }
+
 
 
 function verifyVolunteerLogin() {
