@@ -70,18 +70,20 @@ function doPost(e) {
     var incomingPhone = data.parentPhone || "";
     var finalStatus = data.status || ""; 
     var pincode = data.pincode || data.Pincode || "";
+    // Update your log sheet appendRow inside doPost(e) to capture the Volunteer Name:
+    var authorizedBy = data.voter || data.volunteerName || "Self Kiosk";
 
     // Append columns cleanly straight into your tracker sheets logs layout grid rows
-    logSheet.appendRow([
+  logSheet.appendRow([
       new Date(),
       studentName,
       group,
       parentName,
       incomingPhone, 
       finalStatus, 
-      pincode.toString() 
+      pincode.toString(),
+      authorizedBy // 👈 Appends the Volunteer's Name cleanly as an extra column cell!
     ]);
-
     return ContentService.createTextOutput(JSON.stringify({"status": "success"}))
                          .setMimeType(ContentService.MimeType.JSON);
 
@@ -585,6 +587,52 @@ function doGet(e) {
       return HtmlService.createHtmlOutput("❌ Error building absentee view: " + err.toString());
     }
 }
+
+
+  // =================================================================
+  // ROUTER 6: FETCH ACTIVE VOLUNTEERS (Populates Login Screen)
+  // =================================================================
+    // =================================================================
+  // ROUTER 6: BULLETPROOF ACTIVE VOLUNTEERS LOOKUP (CORS SECURE)
+  // =================================================================
+  if (action === "getActiveVolunteers") {
+    try {
+      var sheet = ss.getSheetByName("AdminConfig");
+      var volunteerList = [];
+      
+      if (sheet) {
+        // Read the entire grid automatically
+        var fullData = sheet.getDataRange().getValues();
+        
+        if (fullData && fullData.length >= 2) {
+          // Loop starts at 1 to skip your header row (Number, Name, Passcode)
+          for (var i = 1; i < fullData.length; i++) {
+            var row = fullData[i];
+            
+            var nameValue = row[1]; // Column B (Name)
+            var pinValue = row[2];  // Column C (Passcode)
+            
+            // Safe Check: Ensure cells are not completely empty
+            if (nameValue && pinValue !== "") {
+              volunteerList.push({
+                name: String(nameValue).trim(),
+                pin: String(pinValue).trim()
+              });
+            }
+          }
+        }
+      }
+      
+      // ✅ FIXED: Removed the invalid setXFrameOptionsMode call so Google servers don't crash
+      return ContentService.createTextOutput(JSON.stringify(volunteerList))
+                           .setMimeType(ContentService.MimeType.JSON);
+                           
+    } catch(err) {
+      // ✅ FIXED: Removed the invalid setXFrameOptionsMode call from the error block too
+      return ContentService.createTextOutput(JSON.stringify([{"name": "❌ Backend Crash Details", "pin": err.toString()}]))
+                           .setMimeType(ContentService.MimeType.JSON);
+    }
+  }
 
 
 
