@@ -161,23 +161,35 @@
 </div>
 
 
+<!-- DUAL-DROPDOWN UPGRADE START for Group based student name filter -->
 <div class="kiosk-wrapper">
     <div class="hero-side">
         <div class="swami-frame"><img src="Swami.jpg" alt="Sathya Sai Baba" class="swami-photo"></div>
         <h1>Smart Bal Vikas</h1>
         <h2>Student Kiosk</h2>
-        <p>Please select your name to complete your quick attendance check-in or check-out.</p>
+        <p>Please select your group and name to complete your quick attendance check-in or check-out.</p>
     </div>
     <div class="form-side">
         <div class="form-container">
             <h2 class="mobile-title">Smart Bal Vikas Student Kiosk</h2>
             <form id="kioskForm" onsubmit="return false;">
+                
+                <!-- 1. DYNAMIC BENCHMARK GROUP FILTER SELECTION -->
+                <div class="field-group">
+                    <label for="groupFilterDropdown" class="control-label">Filter by Benchmark Group</label>
+                    <select id="groupFilterDropdown" class="input-kiosk" onchange="filterStudentListBySelectedGroup()">
+                        <option value="ALL">-- 🌐 Loading Live Groups... --</option>
+                    </select>
+                </div>
+
+                <!-- 2. ALPHABETICAL FILTERED STUDENT SELECTION -->
                 <div class="field-group">
                     <label for="studentDropdown" class="control-label">Student Name</label>
                     <select id="studentDropdown" class="input-kiosk" autocomplete="off" onchange="autofillStudentData()">
-                        <option value="">-- Synchronizing Live Student Roster... --</option>
+                        <option value="">-- Choose Group First --</option>
                     </select>
                 </div>
+
                 <div class="form-grid">
                     <div class="field-group">
                         <label for="group" class="control-label">Grade / Group</label>
@@ -192,6 +204,8 @@
                     <label for="parentPhone" class="control-label">Parent Phone Number</label>
                     <input type="text" id="parentPhone" class="input-kiosk" placeholder="--" readonly>
                 </div>
+<!-- DUAL-DROPDOWN UPGRADE END -->
+
               <!-- GRID 1: ATTENDANCE TRACKER WORKSPACE BUTTONS -->
 <div class="btn-grid">
     <button type="button" class="btn-kiosk btn-checkin" onclick="handleSubmit('Check-in')">
@@ -328,7 +342,7 @@ window.addEventListener("click", resetSessionTimerTracker);
 window.addEventListener("keypress", resetSessionTimerTracker);
 window.addEventListener("change", resetSessionTimerTracker);
 // 📋 STUDENT ROSTER CACHING & AUTOFILL FIELD ENGINES
-function fetchLiveStudentRoster() {
+/*function fetchLiveStudentRoster() {
     const dropdown = document.getElementById("studentDropdown");
     fetch(`${GOOGLE_SCRIPT_URL}?action=getStudents`)
         .then(response => response.json())
@@ -343,7 +357,104 @@ function fetchLiveStudentRoster() {
             });
         })
         .catch(() => { dropdown.innerHTML = '<option value="">❌ Error syncing name list</option>'; });
+}*/
+
+		/**
+ * PHASE 1 UPGRADED: BALANCED DUAL-FILTER DROPDOWN SYNCHRONIZATION ENGINE
+ * Harvests student objects, auto-extracts distinct benchmark group names, and controls displays
+ *Group based student name roster default code ends here
+ */
+function fetchLiveStudentRoster() {
+    const studentDropdown = document.getElementById("studentDropdown");
+    const groupDropdown = document.getElementById("groupFilterDropdown");
+    
+    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("YOUR_DEPLOYED")) {
+        studentDropdown.innerHTML = '<option value="">❌ Configuration Error: Script URL missing</option>';
+        return;
+    }
+
+    // Queries your newly upgraded 5-column Apps Script routine to pull cache details
+    fetch(`${GOOGLE_SCRIPT_URL}?action=getStudents`)
+        .then(response => response.json())
+        .then(cachedMasterObject => {
+            // Secure master dictionary cache into native device local variable memory
+            dynamicStudentDatabase = cachedMasterObject;
+            
+            // 1. Extract Unique Group Strings dynamically from cached properties matrix
+            const distinctGroupsSet = new Set();
+            Object.keys(cachedMasterObject).forEach(studentKey => {
+                const groupValue = cachedMasterObject[studentKey].grade; // Column E value mapping placeholder
+                if (groupValue && groupValue.toString().trim() !== "") {
+                    distinctGroupsSet.add(groupValue.toString().trim());
+                }
+            });
+
+            // 2. Sort Group Headers using your custom benchmarking numeric parameters layout
+            const sortedGroups = Array.from(distinctGroupsSet).sort((a, b) => {
+                const numA = parseInt(a.match(/\d+/), 10) || 0;
+                const numB = parseInt(b.match(/\d+/), 10) || 0;
+                return numA - numB; // Arranges Group 0 down sequentially through Group 4
+            });
+
+            // 3. Build group dropdown selector index profile items
+            groupDropdown.innerHTML = '<option value="ALL">🌐 Show All Enrolled Groups (Default)</option>';
+            sortedGroups.forEach(groupName => {
+                const opt = document.createElement("option");
+                opt.value = groupName;
+                opt.textContent = groupName;
+                groupDropdown.appendChild(opt);
+            });
+
+            // 4. Fire the default populator tool stream matching 'ALL' logic parameters
+            filterStudentListBySelectedGroup();
+        })
+        .catch(error => {
+            console.error("Dual-dropdown population synchronization critical failure:", error);
+            studentDropdown.innerHTML = '<option value="">❌ Error syncing network rosters</option>';
+        });
 }
+
+/**
+ * NEW: FILTERS STUDENT LIST ACCORDING TO ACTIVE SELECTED BENCHMARK TIER
+ * Triggered dynamically onchange whenever the volunteer alters the filter category
+ */
+function filterStudentListBySelectedGroup() {
+    const selectedGroup = document.getElementById("groupFilterDropdown").value;
+    const studentDropdown = document.getElementById("studentDropdown");
+    
+    studentDropdown.innerHTML = '<option value="">-- Tap to Choose Student --</option>';
+
+    // Isolate student names array mapping keys cleanly
+    const masterNamesList = Object.keys(dynamicStudentDatabase);
+
+    // Filter roster names list matching criteria parameters ruleset
+    const filteredNames = masterNamesList.filter(name => {
+        if (selectedGroup === "ALL") return true;
+        return dynamicStudentDatabase[name].grade === selectedGroup;
+    });
+
+    // Alphabetically sort the resulting target array list locally on the device (A to Z)
+    filteredNames.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true }));
+
+    if (filteredNames.length === 0) {
+        studentDropdown.innerHTML = '<option value="">⚠️ No students found inside this group</option>';
+        return;
+    }
+
+    // Append child choice cards options
+    filteredNames.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        studentDropdown.appendChild(option);
+    });
+
+    // Clear underlying profile input value states to avoid dirty cross-stamps
+    document.getElementById("group").value = "";
+    document.getElementById("parentName").value = "";
+    document.getElementById("parentPhone").value = "";
+}
+/*Group based student name roster default code ends here*/
 
 function autofillStudentData() {
     const dropdown = document.getElementById("studentDropdown");
