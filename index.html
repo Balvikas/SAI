@@ -5,38 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Bal Vikas Student Kiosk</title>
     <style>
-        :root {
-            --primary: #4a90e2;
-            --secondary: #50e3c2;
-            --danger: #ff5a5f;
-            --dark: #333333;
-            --light: #f8f9fa;
-        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: var(--dark);
+            background-color: #f4f7f6;
             margin: 0;
             padding: 20px;
+            color: #333;
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background: #ffffff;
+            background: #fff;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         h1, h2, h3 {
-            text-align: center;
             color: #2c3e50;
+            text-align: center;
         }
-        .section {
-            border: 1px solid #e1e4e8;
+        .header-logo {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .portal-section {
+            border: 1px solid #e0e0e0;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 6px;
             margin-bottom: 25px;
-            background: var(--light);
+            background: #fafafa;
         }
         .form-group {
             margin-bottom: 15px;
@@ -46,39 +44,40 @@
             margin-bottom: 5px;
             font-weight: 600;
         }
-        .form-control {
+        input, select {
             width: 100%;
             padding: 10px;
-            border: 1px solid #cccccc;
-            border-radius: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 14px;
         }
         .btn-group {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
+            justify-content: center;
+            margin-top: 20px;
         }
-        .btn {
-            flex: 1;
-            padding: 12px;
+        button {
+            padding: 12px 24px;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 4px;
             cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
             transition: background 0.2s;
-            text-align: center;
         }
+        .btn-primary { background-color: #3498db; color: white; }
         .btn-success { background-color: #2ecc71; color: white; }
-        .btn-success:hover { background-color: #27ae60; }
-        .btn-danger { background-color: var(--danger); color: white; }
-        .btn-danger:hover { background-color: #e04d50; }
-        .btn-primary { background-color: var(--primary); color: white; }
-        .btn-primary:hover { background-color: #357abd; }
-        .btn-secondary { background-color: #95a5a6; color: white; }
-        
-        /* Modal styling */
+        .btn-danger { background-color: #e74c3c; color: white; }
+        .btn-warning { background-color: #f1c40f; color: white; }
+        .error-msg {
+            color: #e74c3c;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
         .modal {
             display: none;
             position: fixed;
@@ -86,12 +85,11 @@
             background: rgba(0,0,0,0.5);
             justify-content: center;
             align-items: center;
-            z-index: 1000;
         }
         .modal-content {
             background: white;
-            padding: 25px;
-            border-radius: 10px;
+            padding: 30px;
+            border-radius: 8px;
             width: 90%;
             max-width: 500px;
             position: relative;
@@ -101,215 +99,211 @@
             top: 10px; right: 15px;
             font-size: 24px;
             cursor: pointer;
-            color: #aaa;
-        }
-        .error-msg {
-            color: var(--danger);
-            font-weight: bold;
-            display: none;
-            margin-top: 10px;
-            text-align: center;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🌸 Smart Bal Vikas 🌸</h1>
-    <h3>Student Kiosk (Swami Portal)</h3>
+    <div class="header-logo">🌸 Swami | Sathya Sai Baba 🌸</div>
+    <h1>Smart Bal Vikas</h1>
+    <h2>Student Kiosk</h2>
+    <p style="text-align:center;">Please select your group and name to complete your quick attendance check-in or check-out.</p>
 
-    <!-- Volunteer Portal Section -->
-    <div class="section" id="volunteerSection">
-        <h2>👥 Volunteer Portal</h2>
+    <!-- Volunteer Portal -->
+    <div class="portal-section">
+        <h2>Volunteer Portal</h2>
         <p>Select your active weekly shift name and enter your secure coordinator passkey PIN code below.</p>
+        
         <div class="form-group">
-            <label for="shiftSelect">Authorized Selector</label>
-            <select id="shiftSelect" class="form-control">
-                <option>-- Weekly Shift Roster Loaded --</option>
-                <option value="morning">Morning Shift</option>
-                <option value="afternoon">Afternoon Shift</option>
+            <label for="volunteerShift">Authorized Selector</label>
+            <select id="volunteerShift">
+                <option>-- Syncing Shift Roster... --</option>
+                <option value="Morning Shift">Morning Shift</option>
+                <option value="Evening Shift">Evening Shift</option>
             </select>
         </div>
+
         <div class="form-group">
-            <label for="passcode">Security Passcode</label>
-            <input type="password" id="passcode" class="form-control" placeholder="Enter PIN">
+            <label for="securityPasscode">Security Passcode</label>
+            <input type="password" id="securityPasscode" placeholder="Enter PIN code">
         </div>
-        <button class="btn btn-primary" onclick="verifyConsole()">Verify & Unlock Console</button>
+
+        <div class="btn-group">
+            <button class="btn-primary" onclick="verifyConsole()">Verify & Unlock Console</button>
+        </div>
         <div id="authError" class="error-msg">❌ Invalid passcode credentials.</div>
     </div>
 
-    <!-- Attendance Kiosk Form (Unlocked Console) -->
-    <div class="section" id="kioskSection">
-        <h2>📝 Student Attendance Check-In / Check-Out</h2>
-        <p>Please select your group and name to complete your quick attendance check-in or check-out.</p>
+    <!-- Student Kiosk Section -->
+    <div class="portal-section">
+        <h2>Smart Bal Vikas Student Kiosk</h2>
         
         <div class="form-group">
-            <label for="groupFilter">Filter by Benchmark Group</label>
-            <select id="groupFilter" class="form-control" onchange="filterStudentsByGroup()">
-                <option value="">-- Choose Group --</option>
-                <option value="Group 1">Group 1 (Grades 1-3)</option>
-                <option value="Group 2">Group 2 (Grades 4-6)</option>
-                <option value="Group 3">Group 3 (Grades 7-9)</option>
+            <label for="benchmarkGroup">Filter by Benchmark Group</label>
+            <select id="benchmarkGroup" onchange="loadStudents()">
+                <option value="">-- 🌐 Loading Live Groups... --</option>
+                <option value="Group 1">Group 1</option>
+                <option value="Group 2">Group 2</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="studentNameSelect">Student Name</label>
-            <select id="studentNameSelect" class="form-control" onchange="onStudentSelect()">
+            <label for="studentName">Student Name</label>
+            <select id="studentName" onchange="handleStudentSelect()">
                 <option value="">-- Choose Group First --</option>
             </select>
         </div>
 
-        <!-- Dynamic Parent/Guardian Selection & Phone Override Field -->
+        <div class="form-group">
+            <label for="gradeGroup">Grade / Group</label>
+            <input type="text" id="gradeGroup" readonly>
+        </div>
+
+        <!-- UPDATED: Parent / Guardian field with datalist to make it overridable -->
         <div class="form-group">
             <label for="parentGuardian">Parent / Guardian</label>
-            <select id="parentGuardian" class="form-control" onchange="onParentSelectOverride()">
-                <option value="">-- Select Parent/Guardian --</option>
-            </select>
+            <input type="text" id="parentGuardian" list="parentList" oninput="handleParentOverride()" placeholder="Select or type Parent/Guardian">
+            <datalist id="parentList">
+                <!-- Populated dynamically from StudentList -->
+            </datalist>
         </div>
 
         <div class="form-group">
             <label for="parentPhone">Parent Phone Number</label>
-            <input type="text" id="parentPhone" class="form-control" placeholder="Phone Number" readonly>
+            <input type="text" id="parentPhone" placeholder="Parent Phone Number">
         </div>
 
         <div class="btn-group">
-            <button class="btn btn-success">🟢 Check In</button>
-            <button class="btn btn-danger">🔴 Check Out</button>
+            <button class="btn-success">🟢 Check In</button>
+            <button class="btn-danger">🔴 Check Out</button>
         </div>
-        
-        <div style="margin-top: 20px; text-align: center;">
-            <button class="btn btn-secondary" style="display:inline-block; width:auto;" onclick="toggleModal(true)">📋 Manage StudentList (CRUD)</button>
-        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <button class="btn-primary" onclick="openStudentListModal()">📋 View StudentList Management</button>
     </div>
 </div>
 
-<!-- StudentList CRUD Modal Panel -->
+<!-- StudentList Modal -->
 <div id="studentListModal" class="modal">
     <div class="modal-content">
-        <span class="close-btn" onclick="toggleModal(false)">✕</span>
-        <h3>📂 StudentList Management</h3>
+        <span class="close-btn" onclick="closeStudentListModal()">✕</span>
+        <h3>StudentList Management</h3>
+        
         <div class="form-group">
             <label>Student's Full Name</label>
-            <input type="text" id="crudName" class="form-control">
+            <input type="text" id="mStudentName">
         </div>
         <div class="form-group">
             <label>Grade / Group</label>
-            <input type="text" id="crudGroup" class="form-control">
+            <input type="text" id="mGradeGroup">
         </div>
         <div class="form-group">
             <label>Parent / Guardian Name</label>
-            <input type="text" id="crudParent" class="form-control">
+            <input type="text" id="mParentName">
         </div>
         <div class="form-group">
             <label>Parent Phone Number</label>
-            <input type="text" id="crudPhone" class="form-control">
+            <input type="text" id="mParentPhone">
         </div>
+
         <div class="btn-group">
-            <button class="btn btn-success" style="padding:8px;">➕ Insert</button>
-            <button class="btn btn-primary" style="padding:8px;">🔄 Update</button>
-            <button class="btn btn-danger" style="padding:8px;">🗑 Delete</button>
+            <button class="btn-success">➕ Insert</button>
+            <button class="btn-warning">🔄 Update</button>
+            <button class="btn-danger">🗑 Delete</button>
         </div>
     </div>
 </div>
 
 <script>
-// Mock data from "StudentList" sheet tab
+// Mock data representing the "StudentList" sheet tab
 const studentListDb = [
-    { fullName: "Aarav Sharma", group: "Group 1", parentName: "Rajesh Sharma", parentPhone: "555-0192" },
-    { fullName: "Sai Patel", group: "Group 1", parentName: "Meera Patel", parentPhone: "555-0481" },
-    { fullName: "Diya Iyer", group: "Group 2", parentName: "Ramesh Iyer", parentPhone: "555-0239" },
-    { fullName: "Arjun Nair", group: "Group 2", parentName: "Lekha Nair", parentPhone: "555-0762" },
-    { fullName: "Ananya Rao", group: "Group 3", parentName: "Srinivas Rao", parentPhone: "555-0988" }
+    { fullName: "Sai Kumar", grade: "Group 1", parentName: "Ramesh Kumar", parentPhone: "9876543210" },
+    { fullName: "Ananya Sharma", grade: "Group 1", parentName: "Suresh Sharma", parentPhone: "8765432109" },
+    { fullName: "Siddharth Rao", grade: "Group 2", parentName: "Venkat Rao", parentPhone: "7654321098" }
 ];
 
-// Global lookup map to hold all unique parents and their respective phones
-let parentPhoneMap = {};
-
-// Initialize application on load
-function initApp() {
-    populateParentDropdown();
-}
-
-// 1. Populate the Parent dropdown with a unique list of parents from StudentList
-function populateParentDropdown() {
-    const parentSelect = document.getElementById('parentGuardian');
-    parentSelect.innerHTML = '<option value="">-- Select Parent/Guardian --</option>';
-    parentPhoneMap = {};
-
+// Initialize the parent list dropdown mapping
+function populateParentDatalist() {
+    const datalist = document.getElementById('parentList');
+    datalist.innerHTML = '';
+    
+    // Create unique set of parents
+    const uniqueParents = {};
     studentListDb.forEach(student => {
-        if (student.parentName && !parentPhoneMap[student.parentName]) {
-            parentPhoneMap[student.parentName] = student.parentPhone;
-            
-            const option = document.createElement('option');
-            option.value = student.parentName;
-            option.textContent = student.parentName;
-            parentSelect.appendChild(option);
+        if (student.parentName) {
+            uniqueParents[student.parentName] = student.parentPhone;
         }
     });
+
+    // Append parents to datalist
+    for (const [parent, phone] of Object.entries(uniqueParents)) {
+        const option = document.createElement('option');
+        option.value = parent;
+        datalist.appendChild(option);
+    }
 }
 
-// Filter student dropdown based on selected Group
-function filterStudentsByGroup() {
-    const selectedGroup = document.getElementById('groupFilter').value;
-    const studentSelect = document.getElementById('studentNameSelect');
+// When a student name is chosen, fill defaults
+function handleStudentSelect() {
+    const studentNameVal = document.getElementById('studentName').value;
+    const student = studentListDb.find(s => s.fullName === studentNameVal);
     
-    studentSelect.innerHTML = '<option value="">-- Choose Student --</option>';
+    if (student) {
+        document.getElementById('gradeGroup').value = student.grade;
+        document.getElementById('parentGuardian').value = student.parentName;
+        document.getElementById('parentPhone').value = student.parentPhone;
+    } else {
+        document.getElementById('gradeGroup').value = '';
+        document.getElementById('parentGuardian').value = '';
+        document.getElementById('parentPhone').value = '';
+    }
+}
+
+// NEW FUNCTION: Handle situation where a different parent is selected or typed
+function handleParentOverride() {
+    const currentParentVal = document.getElementById('parentGuardian').value;
     
-    const filtered = studentListDb.filter(s => s.group === selectedGroup);
+    // Look up if this parent exists in the StudentList system to override the phone number
+    const matchedStudent = studentListDb.find(s => s.parentName === currentParentVal);
+    if (matchedStudent) {
+        document.getElementById('parentPhone').value = matchedStudent.parentPhone;
+    }
+}
+
+function loadStudents() {
+    const group = document.getElementById('benchmarkGroup').value;
+    const studentSelect = document.getElementById('studentName');
+    studentSelect.innerHTML = '<option value="">-- Select Student --</option>';
     
+    const filtered = studentListDb.filter(s => s.grade === group || !group);
     filtered.forEach(s => {
-        const option = document.createElement('option');
-        option.value = s.fullName;
-        option.textContent = s.fullName;
-        studentSelect.appendChild(option);
+        const opt = document.createElement('option');
+        opt.value = s.fullName;
+        opt.textContent = s.fullName;
+        studentSelect.appendChild(opt);
     });
 }
 
-// 2. Default parent details when a student is selected
-function onStudentSelect() {
-    const selectedStudentName = document.getElementById('studentNameSelect').value;
-    const studentRecord = studentListDb.find(s => s.fullName === selectedStudentName);
-    
-    if (studentRecord) {
-        document.getElementById('parentGuardian').value = studentRecord.parentName;
-        document.getElementById('parentPhone').value = studentRecord.parentPhone;
-    } else {
-        document.getElementById('parentGuardian').value = "";
-        document.getElementById('parentPhone').value = "";
-    }
-}
-
-// 3. Override phone number field dynamically when a different parent is selected
-function onParentSelectOverride() {
-    const selectedParent = document.getElementById('parentGuardian').value;
-    
-    if (selectedParent && parentPhoneMap[selectedParent]) {
-        document.getElementById('parentPhone').value = parentPhoneMap[selectedParent];
-    } else {
-        document.getElementById('parentPhone').value = "";
-    }
-}
-
-// Volunteer security passcode logic helper
 function verifyConsole() {
-    const pin = document.getElementById('passcode').value;
-    if(pin === "1234") {
-        document.getElementById('authError').style.display = 'none';
+    const pin = document.getElementById('securityPasscode').value;
+    if (pin === "1234") {
         alert("Console Unlocked Successfully!");
+        document.getElementById('authError').style.display = 'none';
     } else {
         document.getElementById('authError').style.display = 'block';
     }
 }
 
-// Modal helper
-function toggleModal(show) {
-    document.getElementById('studentListModal').style.display = show ? 'flex' : 'none';
-}
+function openStudentListModal() { document.getElementById('studentListModal').style.display = 'flex'; }
+closeStudentListModal = () => { document.getElementById('studentListModal').style.display = 'none'; }
 
-// Run setup
-initApp();
+// Run setup on load
+window.onload = () => {
+    populateParentDatalist();
+    loadStudents();
+};
 </script>
-
 </body>
 </html>
