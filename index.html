@@ -93,7 +93,8 @@
     <div style="background: white; padding: 3rem 2rem; border-radius: 24px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); width: 100%; max-width: 420px; text-align: center; border: 1px solid rgba(255,255,255,0.2); transform: translateY(0); transition: all 0.3s ease;">
         
         <div class="swami-frame" style="margin: 0 auto 1.5rem auto;">
-             <img src="https://images.squarespace-cdn.com/content/v1/536cf0e8e4b0c6114ebfa6f9/1402324707663-KIKLOKLAAJS94PQLV3R8/image-asset.jpeg" class="swami-photo" alt="Sathya Sai Baba">
+             <!-- Preserved dynamic layout anchor link for your image setup -->
+             <img id="gateSwamiPhoto" src="" class="swami-photo" alt="Sathya Sai Baba" style="display:none;">
         </div>
         <h2 style="color: #ea580c; font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 800;">Volunteer Portal</h2>
         <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Select your active weekly shift name and enter your secure coordinator passkey PIN code below.</p>
@@ -120,7 +121,7 @@
     <button class="floating-signup-btn" id="openAuditBtn" style="right: 8rem; border-color: #fed7aa; color: #ea580c;">🚪 Pending Out</button>
     <div class="hero-side">
         <div class="swami-frame">
-            <img src="https://images.squarespace-cdn.com/content/v1/536cf0e8e4b0c6114ebfa6f9/1402324707663-KIKLOKLAAJS94PQLV3R8/image-asset.jpeg" class="swami-photo" alt="Sathya Sai Baba">
+            <img id="heroSwamiPhoto" src="" class="swami-photo" alt="Sathya Sai Baba" style="display:none;">
         </div>
         <h1>Smart Bal Vikas</h1>
         <h2>Student Kiosk</h2>
@@ -235,7 +236,7 @@
 
 <script>
 // ==========================================
-// NEW: GLOBAL STORAGE FOR CROSS-REFERENCE LOOKUPS
+// NEW GLOBAL MAP VARIABLES
 // ==========================================
 let parentPhoneMap = {};
 let rawStudentRosterCached = [];
@@ -278,8 +279,22 @@ function processGateVerification() {
         .verifyCoordinatorPin(shift, pin);
 }
 
-// Fetch Initial Shift Lists
+// Fetch Initial Shift Lists and Configuration Assets
 function fetchShiftVolunteers() {
+    // 1. Fetching your AdminConfig image layouts dynamically
+    google.script.run
+        .withSuccessHandler((config) => {
+            if(config && config.swamiPhotoUrl) {
+                const imgs = ['gateSwamiPhoto', 'heroSwamiPhoto'];
+                imgs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) { el.src = config.swamiPhotoUrl; el.style.display = 'block'; }
+                });
+            }
+        })
+        .getAdminConfigurationSettings(); // Pulls from your 'AdminConfig' layout sheet
+
+    // 2. Fetching Roster Settings
     google.script.run
         .withSuccessHandler((shifts) => {
             const select = document.getElementById('volunteerShiftSelect');
@@ -340,7 +355,6 @@ function runDateAuditScan() {
 function forceAuditCheckout(name, group, dateStr, buttonEl) {
     buttonEl.disabled = true;
     buttonEl.textContent = "⏳...";
-    const alertBox = document.getElementById('auditAlert');
     
     google.script.run
         .withSuccessHandler((res) => {
@@ -360,18 +374,18 @@ function forceAuditCheckout(name, group, dateStr, buttonEl) {
 function fetchLiveStudentRoster() {
     google.script.run
         .withSuccessHandler((roster) => {
-            rawStudentRosterCached = roster; // Cache it locally
+            rawStudentRosterCached = roster;
             
             // ==========================================
-            // NEW: BUILD UNIQUE PARENT LOOKUP DICTIONARY
+            // UPDATED: POPULATING THE PARENT LOOKUP DATALIST
             // ==========================================
             const datalist = document.getElementById('parentListOptions');
             if (datalist) {
                 datalist.innerHTML = '';
-                parentPhoneMap = {};
+                parentPhoneMap = {}; 
                 roster.forEach(student => {
-                    const pName = student.parentName;
-                    const pPhone = student.parentPhone;
+                    const pName = student.parentName; 
+                    const pPhone = student.parentPhone; 
                     if (pName && !parentPhoneMap[pName]) {
                         parentPhoneMap[pName] = pPhone;
                         const opt = document.createElement('option');
@@ -421,11 +435,10 @@ document.getElementById('studentSelect').addEventListener('change', (e) => {
 });
 
 // ==========================================
-// NEW: DYNAMIC OVERRIDE EVENT LISTENER
+// UPDATED: OVERRIDE AUTOMATION EVENT LISTENER
 // ==========================================
 document.getElementById('parentName').addEventListener('input', function(e) {
     const typedParent = e.target.value;
-    // If typing/selecting an alternative parent, overwrite phone instantly
     if (parentPhoneMap[typedParent]) {
         document.getElementById('parentPhone').value = parentPhoneMap[typedParent];
     }
@@ -483,7 +496,7 @@ function processCrudAction(action) {
             if(res.success) {
                 showAlert('crudAlert', `✅ Transaction complete: ${res.message}`, 'success');
                 clearCrudFields();
-                fetchLiveStudentRoster(); // Reload application memory maps
+                fetchLiveStudentRoster(); 
             } else {
                 showAlert('crudAlert', `❌ Operation failed: ${res.message}`, 'danger');
             }
