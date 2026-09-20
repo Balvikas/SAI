@@ -1,309 +1,506 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<!-- Include your single global config manager file -->
+    <script src="config.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Bal Vikas Student Kiosk</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-            color: #333;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #f59e0b;
+            --primary-dark: #b45309;
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        body { 
+            background-color: var(--bg); min-height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-main); position: relative; font-size: 0.9rem; /* Compact Font Core */
         }
-        h1, h2, h3 {
-            color: #2c3e50;
-            text-align: center;
+        .floating-signup-btn {
+            position: fixed; top: 1rem; right: 1rem; width: auto; height: 38px; padding: 0 1rem;
+            border-radius: 20px; background-color: white; border: 2px solid var(--border);
+            color: var(--text-muted); cursor: pointer; display: flex; align-items: center;
+            justify-content: center; font-weight: 700; font-size: 0.85rem; z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); transition: all 0.2s ease;
         }
-        .header-logo {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 10px;
+        .floating-signup-btn:hover { color: #ea580c; border-color: #ea580c; background-color: #fff7ed; transform: scale(1.02); }
+        .kiosk-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
+        .hero-side {
+            background: linear-gradient(135deg, #ea580c 0%, #9a3412 100%); color: white;
+            padding: 3rem 2rem 2rem 2rem; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center; position: relative;
         }
-        .portal-section {
-            border: 1px solid #e0e0e0;
-            padding: 20px;
-            border-radius: 6px;
-            margin-bottom: 25px;
-            background: #fafafa;
+        .swami-frame {
+            width: 140px; height: 140px; border-radius: 50%; background: rgba(255, 255, 255, 0.2);
+            padding: 6px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); margin-bottom: 1rem;
+            display: flex; align-items: center; justify-content: center;
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            transition: background 0.2s;
-        }
-        .btn-primary { background-color: #3498db; color: white; }
-        .btn-success { background-color: #2ecc71; color: white; }
-        .btn-danger { background-color: #e74c3c; color: white; }
-        .btn-warning { background-color: #f1c40f; color: white; }
-        .error-msg {
-            color: #e74c3c;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px; right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-        }
+        .swami-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid white; }
+        .hero-side h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.2rem; letter-spacing: -0.02em; }
+        .hero-side h2 { font-size: 1.2rem; font-weight: 500; opacity: 0.9; margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .hero-side p { font-size: 0.95rem; opacity: 0.8; max-width: 320px; line-height: 1.4; }
+        .form-side { background: white; padding: 2rem 1.5rem; display: flex; align-items: center; justify-content: center; flex-grow: 1; }
+        .form-container { width: 100%; max-width: 480px; }
+        .mobile-title { text-align: center; font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
+        .field-group { margin-bottom: 1rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .control-label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .input-kiosk { width: 100%; padding: 0.85rem 1rem; font-size: 0.95rem; border-radius: 10px; border: 2px solid var(--border); background-color: var(--bg); color: var(--text-main); outline: none; transition: all 0.2s ease; appearance: none; }
+        select.input-kiosk { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem; padding-right: 2.5rem; }
+        .input-kiosk:focus { border-color: #ea580c; background-color: white; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.08); }
+        .input-kiosk[readonly] { cursor: not-allowed; opacity: 0.75; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1.5rem; }
+        .btn-kiosk { padding: 1rem; font-size: 1.05rem; font-weight: 700; border-radius: 12px; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: transform 0.1s ease, filter 0.2s ease; }
+        .btn-kiosk:active { transform: scale(0.98); }
+        .btn-checkin { background-color: var(--success); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); }
+        .btn-checkout { background-color: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15); }
+        .status-alert { margin-top: 1rem; padding: 0.85rem; border-radius: 10px; text-align: center; font-weight: 700; font-size: 0.9rem; display: none; }
+        .alert-warning { background-color: #fef3c7; color: #92400e; }
+        .alert-success { background-color: #d1fae5; color: #065f46; }
+        .alert-danger { background-color: #fee2e2; color: #991b1b; }
+        .alert-loading { background-color: #fef3c7; color: #92400e; }
+        .invalid-pulse { border-color: var(--danger) !important; animation: shake 0.3s ease; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(2px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-card { background: white; width: 100%; max-width: 460px; border-radius: 16px; padding: 1.5rem; box-shadow: 0 15px 20px -5px rgba(0,0,0,0.1); position: relative; animation: slideUp 0.25s ease; }
+        @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 2px solid #fed7aa; padding-bottom: 0.5rem; }
+        .modal-header h3 { font-size: 1.25rem; color: #ea580c; font-weight: 800; }
+        .close-btn { background: #f1f5f9; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 1rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
+        .crud-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-top: 1.25rem; }
+        .btn-crud { padding: 0.75rem; font-size: 0.85rem; font-weight: 700; border-radius: 8px; border: none; color: white; cursor: pointer; }
+        .btn-insert { background-color: var(--success); }
+        .btn-update { background-color: var(--warning); }
+        .btn-delete { background-color: var(--danger); }
+
+        @media (min-width: 576px) { .form-side { padding: 2.5rem; } .form-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 992px) { .kiosk-wrapper { flex-direction: row; } .hero-side { width: 35%; min-height: 100vh; padding: 2rem; } .form-side { width: 65%; min-height: 100vh; } .mobile-title { display: none; } }
     </style>
 </head>
+
 <body>
-
-<div class="container">
-    <div class="header-logo">🌸 Swami | Sathya Sai Baba 🌸</div>
-    <h1>Smart Bal Vikas</h1>
-    <h2>Student Kiosk</h2>
-    <p style="text-align:center;">Please select your group and name to complete your quick attendance check-in or check-out.</p>
-
-    <!-- Volunteer Portal -->
-    <div class="portal-section">
-        <h2>Volunteer Portal</h2>
-        <p>Select your active weekly shift name and enter your secure coordinator passkey PIN code below.</p>
+<!-- 🔐 PREMIUM VOLUNTEER AUTHENTICATION GATEWAY CONSOLE -->
+<div id="kioskLoginGate" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #ea580c 0%, #9a3412 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1.5rem; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div style="background: white; padding: 3rem 2rem; border-radius: 24px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); width: 100%; max-width: 420px; text-align: center; border: 1px solid rgba(255,255,255,0.2); transform: translateY(0); transition: all 0.3s ease;">
         
-        <div class="form-group">
-            <label for="volunteerShift">Authorized Selector</label>
-            <select id="volunteerShift">
-                <option>-- Syncing Shift Roster... --</option>
-                <option value="Morning Shift">Morning Shift</option>
-                <option value="Evening Shift">Evening Shift</option>
-            </select>
+        <div class="swami-frame" style="margin: 0 auto 1.5rem auto;">
+             <img src="https://images.squarespace-cdn.com/content/v1/536cf0e8e4b0c6114ebfa6f9/1402324707663-KIKLOKLAAJS94PQLV3R8/image-asset.jpeg" class="swami-photo" alt="Sathya Sai Baba">
         </div>
-
-        <div class="form-group">
-            <label for="securityPasscode">Security Passcode</label>
-            <input type="password" id="securityPasscode" placeholder="Enter PIN code">
-        </div>
-
-        <div class="btn-group">
-            <button class="btn-primary" onclick="verifyConsole()">Verify & Unlock Console</button>
-        </div>
-        <div id="authError" class="error-msg">❌ Invalid passcode credentials.</div>
-    </div>
-
-    <!-- Student Kiosk Section -->
-    <div class="portal-section">
-        <h2>Smart Bal Vikas Student Kiosk</h2>
+        <h2 style="color: #ea580c; font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 800;">Volunteer Portal</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.4;">Select your active weekly shift name and enter your secure coordinator passkey PIN code below.</p>
         
-        <div class="form-group">
-            <label for="benchmarkGroup">Filter by Benchmark Group</label>
-            <select id="benchmarkGroup" onchange="loadStudents()">
-                <option value="">-- 🌐 Loading Live Groups... --</option>
-                <option value="Group 1">Group 1</option>
-                <option value="Group 2">Group 2</option>
-            </select>
+        <div style="text-align: left; margin-bottom: 1rem;">
+             <label style="display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.4rem; text-transform: uppercase;">Authorized Selector</label>
+             <select id="volunteerShiftSelect" style="width: 100%; padding: 0.8rem 1rem; font-size: 0.9rem; border-radius: 10px; border: 2px solid var(--border); outline: none; background: #f8fafc; font-weight: 600;">
+                  <option value="">-- Syncing Shift Roster... --</option>
+             </select>
         </div>
-
-        <div class="form-group">
-            <label for="studentName">Student Name</label>
-            <select id="studentName" onchange="handleStudentSelect()">
-                <option value="">-- Choose Group First --</option>
-            </select>
+        
+        <div style="text-align: left; margin-bottom: 1.5rem;">
+             <label style="display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.4rem; text-transform: uppercase;">Security Passcode</label>
+             <input type="password" id="volunteerPinInput" placeholder="••••" maxlength="6" style="width: 100%; padding: 0.8rem 1rem; font-size: 1.1rem; border-radius: 10px; border: 2px solid var(--border); outline: none; background: #f8fafc; text-align: center; letter-spacing: 0.3em; font-weight: bold;">
         </div>
-
-        <div class="form-group">
-            <label for="gradeGroup">Grade / Group</label>
-            <input type="text" id="gradeGroup" readonly>
-        </div>
-
-        <!-- UPDATED: Parent / Guardian field with datalist to make it overridable -->
-        <div class="form-group">
-            <label for="parentGuardian">Parent / Guardian</label>
-            <input type="text" id="parentGuardian" list="parentList" oninput="handleParentOverride()" placeholder="Select or type Parent/Guardian">
-            <datalist id="parentList">
-                <!-- Populated dynamically from StudentList -->
-            </datalist>
-        </div>
-
-        <div class="form-group">
-            <label for="parentPhone">Parent Phone Number</label>
-            <input type="text" id="parentPhone" placeholder="Parent Phone Number">
-        </div>
-
-        <div class="btn-group">
-            <button class="btn-success">🟢 Check In</button>
-            <button class="btn-danger">🔴 Check Out</button>
-        </div>
-    </div>
-
-    <div style="text-align: center; margin-top: 20px;">
-        <button class="btn-primary" onclick="openStudentListModal()">📋 View StudentList Management</button>
+        
+        <button id="verifyPinBtn" style="width: 100%; padding: 0.9rem; background: linear-gradient(135deg, #ea580c 0%, #ca8a04 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(234,88,12,0.2);">Verify & Unlock Console</button>
+        <p id="gateErrorMsg" style="color: var(--danger); font-weight: 700; font-size: 0.85rem; margin-top: 1rem; display: none;">❌ Invalid passcode credentials.</p>
     </div>
 </div>
 
-<!-- StudentList Modal -->
-<div id="studentListModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeStudentListModal()">✕</span>
-        <h3>StudentList Management</h3>
-        
-        <div class="form-group">
-            <label>Student's Full Name</label>
-            <input type="text" id="mStudentName">
+<div class="kiosk-wrapper">
+    <button class="floating-signup-btn" id="openCrudModalBtn">🌸 StudentList</button>
+    <button class="floating-signup-btn" id="openAuditBtn" style="right: 8rem; border-color: #fed7aa; color: #ea580c;">🚪 Pending Out</button>
+    <div class="hero-side">
+        <div class="swami-frame">
+            <img src="https://images.squarespace-cdn.com/content/v1/536cf0e8e4b0c6114ebfa6f9/1402324707663-KIKLOKLAAJS94PQLV3R8/image-asset.jpeg" class="swami-photo" alt="Sathya Sai Baba">
         </div>
-        <div class="form-group">
-            <label>Grade / Group</label>
-            <input type="text" id="mGradeGroup">
+        <h1>Smart Bal Vikas</h1>
+        <h2>Student Kiosk</h2>
+        <p>Please select your group and name to complete your quick attendance check-in or check-out.</p>
+    </div>
+    
+    <div class="form-side">
+        <div class="form-container">
+            <h2 class="mobile-title" style="color: #ea580c;">Smart Bal Vikas Student Kiosk</h2>
+            
+            <div class="field-group">
+                <label for="groupFilter" class="control-label">Filter by Benchmark Group</label>
+                <select id="groupFilter" class="input-kiosk">
+                    <option value="">-- 🌐 Loading Live Groups... --</option>
+                </select>
+            </div>
+            
+            <div class="field-group">
+                <label for="studentSelect" class="control-label">Student Name</label>
+                <select id="studentSelect" class="input-kiosk" disabled>
+                    <option value="">-- Choose Group First --</option>
+                </select>
+            </div>
+            
+            <div class="form-grid">
+                <div class="field-group">
+                    <label for="group" class="control-label">Grade / Group</label>
+                    <input type="text" id="group" class="input-kiosk" placeholder="--" readonly>
+                </div>
+                <div class="field-group">
+                    <label for="parentName" class="control-label">Parent / Guardian</label>
+                    <input type="text" id="parentName" class="input-kiosk" placeholder="--" list="parentListOptions">
+                    <datalist id="parentListOptions"></datalist>
+                </div>
+            </div>
+            
+            <div class="field-group">
+                <label for="parentPhone" class="control-label">Parent Phone Number</label>
+                <input type="text" id="parentPhone" class="input-kiosk" placeholder="--">
+            </div>
+            
+            <div class="btn-grid">
+                <button class="btn-kiosk btn-checkin" id="checkInBtn">🟢 Check In</button>
+                <button class="btn-kiosk btn-checkout" id="checkOutBtn">🔴 Check Out</button>
+            </div>
+            
+            <div id="statusAlert" class="status-alert"></div>
         </div>
-        <div class="form-group">
-            <label>Parent / Guardian Name</label>
-            <input type="text" id="mParentName">
-        </div>
-        <div class="form-group">
-            <label>Parent Phone Number</label>
-            <input type="text" id="mParentPhone">
-        </div>
+    </div>
+</div>
 
-        <div class="btn-group">
-            <button class="btn-success">➕ Insert</button>
-            <button class="btn-warning">🔄 Update</button>
-            <button class="btn-danger">🗑 Delete</button>
+<div class="modal-overlay" id="crudModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>StudentList</h3>
+            <button class="close-btn" id="closeCrudModalBtn">✕</button>
         </div>
+        <div class="field-group">
+            <label class="control-label">Student's Full Name</label>
+            <input type="text" id="crudName" class="input-kiosk" placeholder="Enter Full Name">
+        </div>
+        <div class="field-group">
+            <label class="control-label">Grade / Group</label>
+            <input type="text" id="crudGroup" class="input-kiosk" placeholder="e.g. Group 1, Group 2">
+        </div>
+        <div class="field-group">
+            <label class="control-label">Parent / Guardian Name</label>
+            <input type="text" id="crudParentName" class="input-kiosk" placeholder="Parent Name">
+        </div>
+        <div class="field-group">
+            <label class="control-label">Parent Phone Number</label>
+            <input type="text" id="crudParentPhone" class="input-kiosk" placeholder="Phone Number">
+        </div>
+        <div class="crud-grid">
+            <button class="btn-crud btn-insert" id="crudInsertBtn">➕ Insert</button>
+            <button class="btn-crud btn-update" id="crudUpdateBtn">🔄 Update</button>
+            <button class="btn-crud btn-delete" id="crudDeleteBtn">🗑 Delete</button>
+        </div>
+        <div id="crudAlert" class="status-alert" style="margin-top: 1rem;"></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="auditModal">
+    <div class="modal-card" style="max-width: 600px;">
+        <div class="modal-header" style="border-bottom: 2px solid #fecaca;">
+            <h3 style="color: var(--danger);">📅 Date Audit Sign Up</h3>
+            <button class="close-btn" id="closeAuditModalBtn">✕</button>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">The roster below shows active students who are marked checked IN but have not checked OUT on selected historical dates.</p>
+        <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+            <label class="control-label" style="margin-bottom:0; white-space:nowrap;">Target Audit Date:</label>
+            <input type="date" id="auditDateInput" class="input-kiosk" style="padding: 0.5rem; font-size:0.85rem;">
+        </div>
+        <div style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--bg);">
+             <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left;">
+                  <thead>
+                       <tr style="background: #f1f5f9; position: sticky; top: 0; z-index: 10;">
+                            <th style="padding: 0.6rem; border-bottom: 2px solid var(--border);">Name</th>
+                            <th style="padding: 0.6rem; border-bottom: 2px solid var(--border);">Group</th>
+                            <th style="padding: 0.6rem; border-bottom: 2px solid var(--border);">In Time</th>
+                            <th style="padding: 0.6rem; border-bottom: 2px solid var(--border); text-align: center;">Action</th>
+                       </tr>
+                  </thead>
+                  <tbody id="auditTableBody">
+                       <tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-muted);">Select a date above to scan pending logs...</td></tr>
+                  </tbody>
+             </table>
+        </div>
+        <div id="auditAlert" class="status-alert" style="margin-top: 1rem;"></div>
     </div>
 </div>
 
 <script>
-// Mock data representing the "StudentList" sheet tab
-const studentListDb = [
-    { fullName: "Sai Kumar", grade: "Group 1", parentName: "Ramesh Kumar", parentPhone: "9876543210" },
-    { fullName: "Ananya Sharma", grade: "Group 1", parentName: "Suresh Sharma", parentPhone: "8765432109" },
-    { fullName: "Siddharth Rao", grade: "Group 2", parentName: "Venkat Rao", parentPhone: "7654321098" }
-];
+// ==========================================
+// NEW: GLOBAL STORAGE FOR CROSS-REFERENCE LOOKUPS
+// ==========================================
+let parentPhoneMap = {};
+let rawStudentRosterCached = [];
 
-// Initialize the parent list dropdown mapping
-function populateParentDatalist() {
-    const datalist = document.getElementById('parentList');
-    datalist.innerHTML = '';
+// Gate Management Controls
+document.getElementById('verifyPinBtn').addEventListener('click', processGateVerification);
+document.getElementById('volunteerPinInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') processGateVerification(); });
+
+function processGateVerification() {
+    const shift = document.getElementById('volunteerShiftSelect').value;
+    const pin = document.getElementById('volunteerPinInput').value;
+    const errorMsg = document.getElementById('gateErrorMsg');
     
-    // Create unique set of parents
-    const uniqueParents = {};
-    studentListDb.forEach(student => {
-        if (student.parentName) {
-            uniqueParents[student.parentName] = student.parentPhone;
-        }
-    });
-
-    // Append parents to datalist
-    for (const [parent, phone] of Object.entries(uniqueParents)) {
-        const option = document.createElement('option');
-        option.value = parent;
-        datalist.appendChild(option);
+    if(!shift || !pin) {
+        errorMsg.textContent = "⚠️ Please select a shift and provide your PIN code.";
+        errorMsg.style.display = 'block';
+        return;
     }
+    
+    errorMsg.textContent = "⏳ Verifying passcode locks...";
+    errorMsg.style.color = '#b45309';
+    errorMsg.style.display = 'block';
+    
+    google.script.run
+        .withSuccessHandler((isValid) => {
+            if(isValid) {
+                document.getElementById('kioskLoginGate').style.opacity = '0';
+                setTimeout(() => { document.getElementById('kioskLoginGate').style.display = 'none'; }, 300);
+            } else {
+                errorMsg.textContent = "❌ Invalid passcode credentials.";
+                errorMsg.style.color = 'var(--danger)';
+                document.getElementById('volunteerPinInput').classList.add('invalid-pulse');
+                setTimeout(() => document.getElementById('volunteerPinInput').classList.remove('invalid-pulse'), 400);
+            }
+        })
+        .withFailureHandler(() => {
+            errorMsg.textContent = "❌ System validation link failure.";
+            errorMsg.style.color = 'var(--danger)';
+        })
+        .verifyCoordinatorPin(shift, pin);
 }
 
-// When a student name is chosen, fill defaults
-function handleStudentSelect() {
-    const studentNameVal = document.getElementById('studentName').value;
-    const student = studentListDb.find(s => s.fullName === studentNameVal);
-    
-    if (student) {
-        document.getElementById('gradeGroup').value = student.grade;
-        document.getElementById('parentGuardian').value = student.parentName;
-        document.getElementById('parentPhone').value = student.parentPhone;
-    } else {
-        document.getElementById('gradeGroup').value = '';
-        document.getElementById('parentGuardian').value = '';
-        document.getElementById('parentPhone').value = '';
-    }
+// Fetch Initial Shift Lists
+function fetchShiftVolunteers() {
+    google.script.run
+        .withSuccessHandler((shifts) => {
+            const select = document.getElementById('volunteerShiftSelect');
+            select.innerHTML = '<option value="">-- Choose Assigned Shift --</option>';
+            shifts.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s; opt.textContent = s; select.appendChild(opt);
+            });
+        })
+        .getVolunteerShiftsList();
 }
 
-// NEW FUNCTION: Handle situation where a different parent is selected or typed
-function handleParentOverride() {
-    const currentParentVal = document.getElementById('parentGuardian').value;
+// Dialog Control Configurations
+const crudModal = document.getElementById('crudModal');
+document.getElementById('openCrudModalBtn').addEventListener('click', () => { crudModal.style.display = 'flex'; clearCrudFields(); });
+document.getElementById('closeCrudModalBtn').addEventListener('click', () => crudModal.style.display = 'none');
+
+const auditModal = document.getElementById('auditModal');
+document.getElementById('openAuditBtn').addEventListener('click', () => {
+    auditModal.style.display = 'flex';
+    document.getElementById('auditDateInput').value = new Date().toISOString().split('T')[0];
+    runDateAuditScan();
+});
+document.getElementById('closeAuditModalBtn').addEventListener('click', () => auditModal.style.display = 'none');
+document.getElementById('auditDateInput').addEventListener('change', runDateAuditScan);
+
+function runDateAuditScan() {
+    const targetDate = document.getElementById('auditDateInput').value;
+    const tbody = document.getElementById('auditTableBody');
+    if(!targetDate) return;
     
-    // Look up if this parent exists in the StudentList system to override the phone number
-    const matchedStudent = studentListDb.find(s => s.parentName === currentParentVal);
-    if (matchedStudent) {
-        document.getElementById('parentPhone').value = matchedStudent.parentPhone;
-    }
+    tbody.innerHTML = '<tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-muted);">⏳ Scanning historical logs...</td></tr>';
+    
+    google.script.run
+        .withSuccessHandler((records) => {
+            tbody.innerHTML = '';
+            if(!records || records.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--success); font-weight:700;">✅ Clean! No pending sign outs found.</td></tr>';
+                return;
+            }
+            records.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid var(--border)';
+                tr.innerHTML = `
+                    <td style="padding: 0.6rem; font-weight:600;">${r.name}</td>
+                    <td style="padding: 0.6rem; color:var(--text-muted);">${r.group}</td>
+                    <td style="padding: 0.6rem; color:var(--text-muted);">${r.time}</td>
+                    <td style="padding: 0.6rem; text-align: center;">
+                        <button onclick="forceAuditCheckout('${r.name}','${r.group}','${targetDate}', this)" style="padding: 0.3rem 0.6rem; background: var(--danger); color:white; border:none; border-radius:4px; font-weight:700; cursor:pointer; font-size:0.75rem;">Force Out</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        })
+        .fetchPendingSignOutsByDate(targetDate);
 }
 
-function loadStudents() {
-    const group = document.getElementById('benchmarkGroup').value;
-    const studentSelect = document.getElementById('studentName');
-    studentSelect.innerHTML = '<option value="">-- Select Student --</option>';
+function forceAuditCheckout(name, group, dateStr, buttonEl) {
+    buttonEl.disabled = true;
+    buttonEl.textContent = "⏳...";
+    const alertBox = document.getElementById('auditAlert');
     
-    const filtered = studentListDb.filter(s => s.grade === group || !group);
+    google.script.run
+        .withSuccessHandler((res) => {
+            if(res.success) {
+                showAlert('auditAlert', `Successfully checked out ${name}`, 'success');
+                runDateAuditScan();
+            } else {
+                showAlert('auditAlert', res.message || 'Action failed.', 'danger');
+                buttonEl.disabled = false;
+                buttonEl.textContent = "Force Out";
+            }
+        })
+        .executeBackdatedCheckout(name, group, dateStr);
+}
+
+// Form Database Field Mappings
+function fetchLiveStudentRoster() {
+    google.script.run
+        .withSuccessHandler((roster) => {
+            rawStudentRosterCached = roster; // Cache it locally
+            
+            // ==========================================
+            // NEW: BUILD UNIQUE PARENT LOOKUP DICTIONARY
+            // ==========================================
+            const datalist = document.getElementById('parentListOptions');
+            if (datalist) {
+                datalist.innerHTML = '';
+                parentPhoneMap = {};
+                roster.forEach(student => {
+                    const pName = student.parentName;
+                    const pPhone = student.parentPhone;
+                    if (pName && !parentPhoneMap[pName]) {
+                        parentPhoneMap[pName] = pPhone;
+                        const opt = document.createElement('option');
+                        opt.value = pName;
+                        datalist.appendChild(opt);
+                    }
+                });
+            }
+            // ==========================================
+
+            const groupFilter = document.getElementById('groupFilter');
+            const uniqueGroups = [...new Set(roster.map(s => s.group).filter(Boolean))].sort();
+            
+            groupFilter.innerHTML = '<option value="">-- Select Group Category --</option>';
+            uniqueGroups.forEach(g => {
+                const opt = document.createElement('option'); opt.value = g; opt.textContent = g; groupFilter.appendChild(opt);
+            });
+        })
+        .getLiveRosterData();
+}
+
+document.getElementById('groupFilter').addEventListener('change', (e) => {
+    const group = e.target.value;
+    const studentSelect = document.getElementById('studentSelect');
+    
+    clearKioskFormFields();
+    if(!group) { studentSelect.innerHTML = '<option value="">-- Choose Group First --</option>'; studentSelect.disabled = true; return; }
+    
+    const filtered = rawStudentRosterCached.filter(s => s.group === group).sort((a,b) => a.name.localeCompare(b.name));
+    studentSelect.innerHTML = '<option value="">-- Select Student Name --</option>';
     filtered.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s.fullName;
-        opt.textContent = s.fullName;
-        studentSelect.appendChild(opt);
+        const opt = document.createElement('option'); opt.value = s.name; opt.textContent = s.name; studentSelect.appendChild(opt);
     });
-}
+    studentSelect.disabled = false;
+});
 
-function verifyConsole() {
-    const pin = document.getElementById('securityPasscode').value;
-    if (pin === "1234") {
-        alert("Console Unlocked Successfully!");
-        document.getElementById('authError').style.display = 'none';
-    } else {
-        document.getElementById('authError').style.display = 'block';
+document.getElementById('studentSelect').addEventListener('change', (e) => {
+    const selectedName = e.target.value;
+    if(!selectedName) { clearKioskFormFields(); return; }
+    
+    const student = rawStudentRosterCached.find(s => s.name === selectedName);
+    if(student) {
+        document.getElementById('group').value = student.group || '';
+        document.getElementById('parentName').value = student.parentName || '';
+        document.getElementById('parentPhone').value = student.parentPhone || '';
     }
+});
+
+// ==========================================
+// NEW: DYNAMIC OVERRIDE EVENT LISTENER
+// ==========================================
+document.getElementById('parentName').addEventListener('input', function(e) {
+    const typedParent = e.target.value;
+    // If typing/selecting an alternative parent, overwrite phone instantly
+    if (parentPhoneMap[typedParent]) {
+        document.getElementById('parentPhone').value = parentPhoneMap[typedParent];
+    }
+});
+// ==========================================
+
+// Submission Processing Hooks
+document.getElementById('checkInBtn').addEventListener('click', () => submitAttendance('Check In'));
+document.getElementById('checkOutBtn').addEventListener('click', () => submitAttendance('Check Out'));
+
+function submitAttendance(actionType) {
+    const name = document.getElementById('studentSelect').value;
+    const group = document.getElementById('group').value;
+    const parent = document.getElementById('parentName').value;
+    const phone = document.getElementById('parentPhone').value;
+    
+    if(!name || !group || !parent || !phone) {
+        showAlert('statusAlert', '⚠️ Absolute baseline tracking error! Complete all profiles.', 'warning');
+        return;
+    }
+    
+    showAlert('statusAlert', `⏳ Broadcasting your ${actionType} event execution sequence...`, 'loading');
+    
+    google.script.run
+        .withSuccessHandler((res) => {
+            if(res.success) {
+                showAlert('statusAlert', `🎉 ${res.message}`, 'success');
+                setTimeout(() => { document.getElementById('groupFilter').value = ''; clearKioskFormFields(); document.getElementById('studentSelect').innerHTML = '<option value="">-- Choose Group First --</option>'; document.getElementById('studentSelect').disabled = true; }, 3000);
+            } else {
+                showAlert('statusAlert', `❌ Database rejection error: ${res.message}`, 'danger');
+            }
+        })
+        .withFailureHandler(() => { showAlert('statusAlert', '❌ Critical structural communication network failure.', 'danger'); })
+        .processAttendanceSubmission({ name, group, parent, phone, type: actionType });
 }
 
-function openStudentListModal() { document.getElementById('studentListModal').style.display = 'flex'; }
-closeStudentListModal = () => { document.getElementById('studentListModal').style.display = 'none'; }
+// Administrative Management CRUD Processing Hooks
+document.getElementById('crudInsertBtn').addEventListener('click', () => processCrudAction('Insert'));
+document.getElementById('crudUpdateBtn').addEventListener('click', () => processCrudAction('Update'));
+document.getElementById('crudDeleteBtn').addEventListener('click', () => processCrudAction('Delete'));
 
-// Run setup on load
-window.onload = () => {
-    populateParentDatalist();
-    loadStudents();
-};
+function processCrudAction(action) {
+    const name = document.getElementById('crudName').value.trim();
+    const group = document.getElementById('crudGroup').value.trim();
+    const parent = document.getElementById('crudParentName').value.trim();
+    const phone = document.getElementById('crudParentPhone').value.trim();
+    
+    if(!name) { showAlert('crudAlert', '⚠️ Primary key validation error: Student Name required.', 'warning'); return; }
+    if(action !== 'Delete' && (!group || !parent || !phone)) { showAlert('crudAlert', '⚠️ Core tracking requirement missing for insert/update options.', 'warning'); return; }
+    
+    showAlert('crudAlert', `⏳ Injecting custom database programmatic transaction: ${action}...`, 'loading');
+    
+    google.script.run
+        .withSuccessHandler((res) => {
+            if(res.success) {
+                showAlert('crudAlert', `✅ Transaction complete: ${res.message}`, 'success');
+                clearCrudFields();
+                fetchLiveStudentRoster(); // Reload application memory maps
+            } else {
+                showAlert('crudAlert', `❌ Operation failed: ${res.message}`, 'danger');
+            }
+        })
+        .processStudentCrudOperation({ action, name, group, parent, phone });
+}
+
+// Utility Clean Up Wrappers
+function clearKioskFormFields() { document.getElementById('group').value = ''; document.getElementById('parentName').value = ''; document.getElementById('parentPhone').value = ''; }
+function clearCrudFields() { document.getElementById('crudName').value = ''; document.getElementById('crudGroup').value = ''; document.getElementById('crudParentName').value = ''; document.getElementById('crudParentPhone').value = ''; }
+
+function showAlert(targetId, msg, type) {
+    const el = document.getElementById(targetId); el.textContent = msg; el.className = `status-alert alert-${type}`; el.style.display = 'block';
+    if(type !== 'loading' && targetId === 'statusAlert') { setTimeout(() => { el.style.display = 'none'; }, 5000); }
+}
+
+window.addEventListener("DOMContentLoaded", () => { fetchLiveStudentRoster(); fetchShiftVolunteers(); });
 </script>
 </body>
 </html>
