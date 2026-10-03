@@ -86,17 +86,15 @@
         @media (min-width: 992px) { .kiosk-wrapper { flex-direction: row; } .hero-side { width: 35%; min-height: 100vh; padding: 2rem; } .form-side { width: 65%; min-height: 100vh; } .mobile-title { display: none; } }
     </style>
 </head>
-
 <body>
 <!-- 🔐 PREMIUM VOLUNTEER AUTHENTICATION GATEWAY CONSOLE -->
 <div id="kioskLoginGate" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #ea580c 0%, #9a3412 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1.5rem; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
     <div style="background: white; padding: 3rem 2rem; border-radius: 24px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); width: 100%; max-width: 420px; text-align: center; border: 1px solid rgba(255,255,255,0.2); transform: translateY(0); transition: all 0.3s ease;">
         
-<!-- 🌸 FIXED: BALANCED PERFECTLY CENTERED CIRCULAR SWAMI PHOTO FRAME -->
-<div style="width: 140px; height: 140px; border-radius: 50%; background: #fff7ed; padding: 6px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); margin: 0 auto 1.5rem auto; display: flex; align-items: center; justify-content: center; border: 2px solid #fed7aa; overflow: hidden;">
-    <img src="Swami.jpg" alt="Swami" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid white; display: block; margin: 0 auto;">
-</div>
-
+        <!-- 🌸 FIXED: BALANCED PERFECTLY CENTERED CIRCULAR SWAMI PHOTO FRAME -->
+        <div style="width: 140px; height: 140px; border-radius: 50%; background: #fff7ed; padding: 6px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); margin: 0 auto 1.5rem auto; display: flex; align-items: center; justify-content: center; border: 2px solid #fed7aa; overflow: hidden;">
+            <img src="Swami.jpg" alt="Swami" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid white; display: block; margin: 0 auto;">
+        </div>
         
         <h2 style="color: #1e293b; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: -0.01em;">Volunteer Portal</h2>
         <p style="color: #64748b; font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.45; max-width: 320px; margin-left: auto; margin-right: auto;">Select your active weekly shift name and enter your secure coordinator passkey PIN code below.</p>
@@ -105,18 +103,16 @@
             <!-- SELECT FIELD STYLING -->
             <div style="margin-bottom: 1rem; text-align: left;">
                 <label for="volunteerSelect" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em;">Authorized Selector</label>
-                <select id="volunteerSelect" style="width: 100%; padding: 0.9rem 1.2rem; font-size: 1rem; border-radius: 12px; border: 2px solid #e2e8f0; background-color: #f8fafc; color: #1e293b; font-weight: 600; outline: none; transition: all 0.2s ease; cursor: pointer; appearance: none; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem;" required>
+                <select id="volunteerSelect" style="width: 100%; padding: 0.9rem 1.2rem; font-size: 1rem; border-radius: 12px; border: 2px solid #e2e8f0; background-color: #f8fafc; color: #1e293b; font-weight: 600; outline: none; transition: all 0.2s ease; cursor: pointer; appearance: none; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://w3.org\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2364748b\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem;" required>
                     <option value="">-- Syncing Shift Roster... --</option>
                 </select>
             </div>
             
-            <!-- PASSCODE FIELD STYLING -->
             <div style="margin-bottom: 1.75rem; text-align: left;">
                 <label for="gatePinInput" style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em;">Security Passcode</label>
                 <input type="password" id="gatePinInput" maxlength="6" placeholder="••••" autocomplete="off" style="width: 100%; padding: 0.9rem; font-size: 1.6rem; border-radius: 12px; border: 2px solid #e2e8f0; background-color: #f8fafc; text-align: center; letter-spacing: 0.25em; color: #1e293b; font-weight: 700; outline: none; transition: all 0.2s ease;" required>
             </div>
             
-            <!-- SUBMIT BUTTON STYLING -->
             <button type="submit" style="width: 100%; padding: 1.1rem; font-size: 1.1rem; font-weight: 700; color: white; background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25); transition: filter 0.2s ease, transform 0.1s ease;">
                 Verify & Unlock Console
             </button>
@@ -128,40 +124,27 @@
     </div>
 </div>
 
-
-<!-- 🌸 YOUR TOP NAV BAR AND REMAINDER OF FILE FOLLOWS CONTINUOUSLY BELOW -->
-
-<!-- REVISED SYSTEM HEADER BAR WITH ADMIN UTILITY SHORTCUTS SIDE-BY-SIDE -->
 <div class="top-navbar" style="position: fixed; top: 0; left: 0; right: 0; height: 60px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
     <div class="nav-logo" style="font-weight: 700; font-size: 1.05rem; color: #ea580c; text-transform: uppercase; letter-spacing: 0.05em;">🌸 </div>
     
-    <!-- Unified container tracking all operational dashboard links side-by-side on the right -->
     <div style="display: flex; gap: 0.5rem; align-items: center;">
-        
-        <!-- 1. PENDING CHECK-OUT LINK -->
         <button class="nav-menu-item" onclick="getPendingCheckOut()" style="color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 0.4rem 0.75rem; border-radius: 8px; border: 2px solid var(--border); background: none; cursor: pointer; display: flex; align-items: center; gap: 0.3rem;">
             <span>🚪</span> Pending Out
         </button>
 
-        <!-- 2. DATE HISTORY AUDIT LINK -->
         <a href="absent.html" class="nav-menu-item" style="color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 0.4rem 0.75rem; border-radius: 8px; border: 2px solid var(--border); display: flex; align-items: center; gap: 0.3rem;">
             <span>📅</span> Date Audit
         </a>
 
-        <!-- 3. EXTRACTED SIGN UP REGISTRATION POPUP LINK -->
         <button class="nav-menu-item" onclick="toggleSignupModal(true)" style="color: var(--text-muted); text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 0.4rem 0.75rem; border-radius: 8px; border: 2px solid var(--border); background: none; cursor: pointer; display: flex; align-items: center; gap: 0.3rem;">
-            <svg xmlns="http://w3.org" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
             </svg>
             Sign Up
         </button>
-        
     </div>
 </div>
-
-
-<!-- DUAL-DROPDOWN UPGRADE START for Group based student name filter -->
 <div class="kiosk-wrapper">
     <div class="hero-side">
         <div class="swami-frame"><img src="Swami.jpg" alt="Sathya Sai Baba" class="swami-photo"></div>
@@ -174,7 +157,6 @@
             <h2 class="mobile-title">Smart Bal Vikas Student Kiosk</h2>
             <form id="kioskForm" onsubmit="return false;">
                 
-                <!-- 1. DYNAMIC BENCHMARK GROUP FILTER SELECTION -->
                 <div class="field-group">
                     <label for="groupFilterDropdown" class="control-label">Filter by Benchmark Group</label>
                     <select id="groupFilterDropdown" class="input-kiosk" onchange="filterStudentListBySelectedGroup()">
@@ -182,7 +164,6 @@
                     </select>
                 </div>
 
-                <!-- 2. ALPHABETICAL FILTERED STUDENT SELECTION -->
                 <div class="field-group">
                     <label for="studentDropdown" class="control-label">Student Name</label>
                     <select id="studentDropdown" class="input-kiosk" autocomplete="off" onchange="autofillStudentData()">
@@ -196,34 +177,31 @@
                         <input type="text" id="group" class="input-kiosk" placeholder="--" readonly>
                     </div>
                     <div class="field-group">
+                        <!-- REMOVED READONLY: Enabled parent name overrides -->
                         <label for="parentName" class="control-label">Parent / Guardian</label>
                         <input type="text" id="parentName" class="input-kiosk" placeholder="--">
                     </div>
                 </div>
                 <div class="field-group">
+                    <!-- REMOVED READONLY: Enabled parent phone overrides -->
                     <label for="parentPhone" class="control-label">Parent Phone Number</label>
                     <input type="text" id="parentPhone" class="input-kiosk" placeholder="--">
                 </div>
-<!-- DUAL-DROPDOWN UPGRADE END -->
 
-              <!-- GRID 1: ATTENDANCE TRACKER WORKSPACE BUTTONS -->
-<div class="btn-grid">
-    <button type="button" class="btn-kiosk btn-checkin" onclick="handleSubmit('Check-in')">
-        <span>🟢</span> Check In
-    </button>
-    <button type="button" class="btn-kiosk btn-checkout" onclick="handleSubmit('Check-out')">
-        <span>🔴</span> Check Out
-    </button>
-</div>
-
-
+                <div class="btn-grid">
+                    <button type="button" class="btn-kiosk btn-checkin" onclick="handleSubmit('Check-in')">
+                        <span>🟢</span> Check In
+                    </button>
+                    <button type="button" class="btn-kiosk btn-checkout" onclick="handleSubmit('Check-out')">
+                        <span>🔴</span> Check Out
+                    </button>
+                </div>
 				
                 <div id="statusAlert" class="status-alert"></div>
             </form>
         </div>
     </div>
 </div>
-
 <div id="signupModal" class="modal-overlay">
     <div class="modal-card">
         <div class="modal-header">
@@ -257,10 +235,7 @@
     </div>
 </div>
 
-
-	<script>
-//const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQGtahzr7rTeIW5co1fpwJmgvY_WzAecg9CUF25ikvcJGwmqg_r2-1GygZtRoUDtD8/exec";
-//const GOOGLE_SCRIPT_URL = "https://google.com";
+<script>
 const GOOGLE_SCRIPT_URL = GLOBAL_CONFIG.GOOGLE_SCRIPT_URL;
 		
 let dynamicStudentDatabase = {};
@@ -268,8 +243,6 @@ let volunteerRosterCache = [];
 let activeLoggedInVolunteer = "Self Kiosk";
 let sessionTimeoutTracker;
 
-// 🔐 VOLUNTEER AUTHENTICATION ENGINE (Step 5)
-// 🔐 VOLUNTEER AUTHENTICATION ENGINE (CORRECTED FRONTEND RES TYPO)
 function fetchShiftVolunteers() {
     const select = document.getElementById("volunteerSelect");
     if (!select) return;
@@ -277,7 +250,7 @@ function fetchShiftVolunteers() {
     fetch(`${GOOGLE_SCRIPT_URL}?action=getActiveVolunteers`)
         .then(res => {
             if (!res.ok) throw new Error("Server network port error");
-            return res.json(); // ✅ FIXED: Now correctly matches the "res" variable from above!
+            return res.json(); 
         })
         .then(data => {
             volunteerRosterCache = data;
@@ -288,9 +261,8 @@ function fetchShiftVolunteers() {
                 return;
             }
             
-            // If the backend sent an error message, catch it and show it
-            if (data[0] && data[0].name.startsWith("❌")) {
-                select.innerHTML = `<option value="">${data[0].name}: ${data[0].pin}</option>`;
+            if (data && data.name && data.name.startsWith("❌")) {
+                select.innerHTML = `<option value="">${data.name}: ${data.pin}</option>`;
                 return;
             }
             
@@ -307,8 +279,37 @@ function fetchShiftVolunteers() {
         });
 }
 
+// 🌐 NEW INTERCEPTOR: DYNAMICALLY READS SpreadSheet CONFIG AND ENFORCES GROUP DEFAULTS
+function applyVolunteerDefaultGroupLookup(volunteerNameString) {
+    const groupDropdown = document.getElementById("groupFilterDropdown");
+    if (!groupDropdown || !volunteerNameString) return;
 
+    const matchedUserObj = volunteerRosterCache.find(v => v.name === volunteerNameString);
+    
+    if (matchedUserObj && matchedUserObj.benchmarkGroup && matchedUserObj.benchmarkGroup.toString().trim().toUpperCase() !== "ALL") {
+        const assignedTargetGroup = matchedUserObj.benchmarkGroup.toString().trim();
+        
+        let optionExists = false;
+        for (let i = 0; i < groupDropdown.options.length; i++) {
+            if (groupDropdown.options[i].value === assignedTargetGroup) {
+                optionExists = true;
+                break;
+            }
+        }
 
+        if (!optionExists) {
+            const dynamicOpt = document.createElement("option");
+            dynamicOpt.value = dynamicOpt.textContent = assignedTargetGroup;
+            groupDropdown.appendChild(dynamicOpt);
+        }
+
+        groupDropdown.value = assignedTargetGroup;
+    } else {
+        groupDropdown.value = "ALL";
+    }
+
+    filterStudentListBySelectedGroup();
+}
 function verifyVolunteerLogin() {
     const selectedName = document.getElementById("volunteerSelect").value;
     const pinField = document.getElementById("gatePinInput");
@@ -320,6 +321,8 @@ function verifyVolunteerLogin() {
         activeLoggedInVolunteer = selectedName;
         document.getElementById("kioskLoginGate").style.display = "none";
         pinField.value = ""; loginError.style.display = "none";
+        
+        applyVolunteerDefaultGroupLookup(selectedName);
         resetSessionTimerTracker();
     } else {
         loginError.style.display = "block";
@@ -341,29 +344,7 @@ function resetSessionTimerTracker() {
 window.addEventListener("click", resetSessionTimerTracker);
 window.addEventListener("keypress", resetSessionTimerTracker);
 window.addEventListener("change", resetSessionTimerTracker);
-// 📋 STUDENT ROSTER CACHING & AUTOFILL FIELD ENGINES
-/*function fetchLiveStudentRoster() {
-    const dropdown = document.getElementById("studentDropdown");
-    fetch(`${GOOGLE_SCRIPT_URL}?action=getStudents`)
-        .then(response => response.json())
-        .then(cachedMasterObject => {
-            dynamicStudentDatabase = cachedMasterObject;
-            dropdown.innerHTML = '<option value="">-- Tap to Choose Student --</option>';
-            const sortedNames = Object.keys(cachedMasterObject).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true }));
-            sortedNames.forEach(name => {
-                const option = document.createElement("option");
-                option.value = name; option.textContent = name;
-                dropdown.appendChild(option);
-            });
-        })
-        .catch(() => { dropdown.innerHTML = '<option value="">❌ Error syncing name list</option>'; });
-}*/
 
-		/**
- * PHASE 1 UPGRADED: BALANCED DUAL-FILTER DROPDOWN SYNCHRONIZATION ENGINE
- * Harvests student objects, auto-extracts distinct benchmark group names, and controls displays
- *Group based student name roster default code ends here
- */
 function fetchLiveStudentRoster() {
     const studentDropdown = document.getElementById("studentDropdown");
     const groupDropdown = document.getElementById("groupFilterDropdown");
@@ -373,40 +354,37 @@ function fetchLiveStudentRoster() {
         return;
     }
 
-    // Queries your newly upgraded 5-column Apps Script routine to pull cache details
     fetch(`${GOOGLE_SCRIPT_URL}?action=getStudents`)
         .then(response => response.json())
         .then(cachedMasterObject => {
-            // Secure master dictionary cache into native device local variable memory
             dynamicStudentDatabase = cachedMasterObject;
             
-            // 1. Extract Unique Group Strings dynamically from cached properties matrix
             const distinctGroupsSet = new Set();
             Object.keys(cachedMasterObject).forEach(studentKey => {
-                const groupValue = cachedMasterObject[studentKey].grade; // Column E value mapping placeholder
+                const groupValue = cachedMasterObject[studentKey].grade; 
                 if (groupValue && groupValue.toString().trim() !== "") {
                     distinctGroupsSet.add(groupValue.toString().trim());
                 }
             });
 
-            // 2. Sort Group Headers using your custom benchmarking numeric parameters layout
             const sortedGroups = Array.from(distinctGroupsSet).sort((a, b) => {
                 const numA = parseInt(a.match(/\d+/), 10) || 0;
                 const numB = parseInt(b.match(/\d+/), 10) || 0;
-                return numA - numB; // Arranges Group 0 down sequentially through Group 4
+                return numA - numB; 
             });
 
-            // 3. Build group dropdown selector index profile items
             groupDropdown.innerHTML = '<option value="ALL">🌐 Show All Enrolled Groups (Default)</option>';
             sortedGroups.forEach(groupName => {
                 const opt = document.createElement("option");
-                opt.value = groupName;
-                opt.textContent = groupName;
+                opt.value = opt.textContent = groupName;
                 groupDropdown.appendChild(opt);
             });
 
-            // 4. Fire the default populator tool stream matching 'ALL' logic parameters
-            filterStudentListBySelectedGroup();
+            if (activeLoggedInVolunteer && activeLoggedInVolunteer !== "Self Kiosk") {
+                applyVolunteerDefaultGroupLookup(activeLoggedInVolunteer);
+            } else {
+                filterStudentListBySelectedGroup();
+            }
         })
         .catch(error => {
             console.error("Dual-dropdown population synchronization critical failure:", error);
@@ -414,26 +392,19 @@ function fetchLiveStudentRoster() {
         });
 }
 
-/**
- * NEW: FILTERS STUDENT LIST ACCORDING TO ACTIVE SELECTED BENCHMARK TIER
- * Triggered dynamically onchange whenever the volunteer alters the filter category
- */
 function filterStudentListBySelectedGroup() {
     const selectedGroup = document.getElementById("groupFilterDropdown").value;
     const studentDropdown = document.getElementById("studentDropdown");
     
     studentDropdown.innerHTML = '<option value="">-- Tap to Choose Student --</option>';
 
-    // Isolate student names array mapping keys cleanly
     const masterNamesList = Object.keys(dynamicStudentDatabase);
 
-    // Filter roster names list matching criteria parameters ruleset
     const filteredNames = masterNamesList.filter(name => {
         if (selectedGroup === "ALL") return true;
         return dynamicStudentDatabase[name].grade === selectedGroup;
     });
 
-    // Alphabetically sort the resulting target array list locally on the device (A to Z)
     filteredNames.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true }));
 
     if (filteredNames.length === 0) {
@@ -441,20 +412,16 @@ function filterStudentListBySelectedGroup() {
         return;
     }
 
-    // Append child choice cards options
     filteredNames.forEach(name => {
         const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
+        option.value = option.textContent = name;
         studentDropdown.appendChild(option);
     });
 
-    // Clear underlying profile input value states to avoid dirty cross-stamps
     document.getElementById("group").value = "";
     document.getElementById("parentName").value = "";
     document.getElementById("parentPhone").value = "";
 }
-/*Group based student name roster default code ends here*/
 
 function autofillStudentData() {
     const dropdown = document.getElementById("studentDropdown");
@@ -500,7 +467,6 @@ function executeDatabaseAction(dbMethod) {
     .catch(() => { alertBox.className = "status-alert alert-danger"; alertBox.textContent = "❌ Network error."; });
 }
 
-// 🟢 SUBMISSION LOGS ENGINE WITH VOLUNTEER SIGNATURES (Step 6)
 function handleSubmit(statusType) {
     const dropdown = document.getElementById("studentDropdown");
     const alertBox = document.getElementById("statusAlert");
@@ -521,22 +487,23 @@ function handleSubmit(statusType) {
             document.getElementById("kioskForm").reset(); 
             alertBox.style.display = "none"; 
             
-            // ✅ FIXED: The instant lock gate code has been removed!
-            // The screen will clear cleanly and let the volunteer pick the next student immediately.
-            // It will only re-lock if untouched for 3 minutes.
-            
-            // Force reset your group filter back to "ALL" so the list resets for the next kid
-            document.getElementById("groupFilterDropdown").value = "ALL";
-            filterStudentListBySelectedGroup();
+            if (activeLoggedInVolunteer && activeLoggedInVolunteer !== "Self Kiosk") {
+                applyVolunteerDefaultGroupLookup(activeLoggedInVolunteer);
+            } else {
+                document.getElementById("groupFilterDropdown").value = "ALL";
+                filterStudentListBySelectedGroup();
+            }
         }, 2500);
     })
     .catch(() => { alertBox.className = "status-alert alert-danger"; alertBox.textContent = "❌ Connection error."; });
 }
 
-
 window.addEventListener("DOMContentLoaded", () => { fetchLiveStudentRoster(); fetchShiftVolunteers(); });
-
-
 </script>
 </body>
 </html>
+
+
+
+
+	
